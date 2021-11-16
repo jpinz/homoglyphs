@@ -49,7 +49,7 @@ public class Languages
 
     public Languages(string language)
     {
-        this._alphabet = GetAlphabet(language) ?? throw new InvalidOperationException($"{language} is not a valid language!");
+        this._alphabet = GetAlphabet(language);
     }
 
     public IEnumerable<char> AlphabetChars => this._alphabet;
@@ -59,9 +59,9 @@ public class Languages
         return this._alphabet.Contains(c);
     }
 
-    public static IEnumerable<char>? GetAlphabet(string language)
+    public static IEnumerable<char> GetAlphabet(string language)
     {
-        return LANGUAGE_DICTIONARY.TryGetValue(language, out var alphabet) ? alphabet.ToCharArray() : null;
+        return LANGUAGE_DICTIONARY.TryGetValue(language, out var alphabet) ? alphabet.ToCharArray() : throw new InvalidOperationException($"{language} is not a valid language!");
     }
 
     public static IEnumerable<string> DetectLanguage(char c)

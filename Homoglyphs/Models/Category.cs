@@ -119,7 +119,7 @@ namespace Homoglyphs.Models
             return null;
         }
 
-        private Alphabet? DetectAlphabet(char c)
+        public Alphabet? DetectAlphabet(char c)
         {
             foreach (var (alphabet, ranges) in this.categoriesDictionary)
             {
