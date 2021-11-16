@@ -2,8 +2,13 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // --------------------------------------------------------------------------------------------
 
+using Homoglyphs.Models;
+
 namespace Homoglyphs.Helpers;
 
+/// <summary>
+/// The helper class for <see cref="Language"/>.
+/// </summary>
 public static class LanguageHelper
 {
     /// <summary>

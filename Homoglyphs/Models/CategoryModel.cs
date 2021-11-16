@@ -10,7 +10,7 @@ namespace Homoglyphs.Models;
 public class CategoryModel
 {
     [JsonProperty("Alphabet")]
-    public Alphabet Alphabet { get; set; }
+    public AlphabetType AlphabetType { get; set; }
 
     [JsonProperty("Start")]
     public int StartCode { get; set; }

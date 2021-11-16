@@ -80,8 +80,8 @@ public class Homoglyphs
                 return false;
             }
 
-            this.categoriesList?.Add(new Category((Alphabet)catAlphabet));
-            this._alphabetChars.AddRange(category.GetAlphabetChars((Alphabet)catAlphabet) ?? Array.Empty<char>());
+            this.categoriesList?.Add(new Category((AlphabetType)catAlphabet));
+            this._alphabetChars.AddRange(category.GetAlphabetChars((AlphabetType)catAlphabet) ?? Array.Empty<char>());
         }
 
         this.table = GetTable(this._alphabetChars);
@@ -95,8 +95,8 @@ public class Homoglyphs
         {
             categoriesList = new List<Category>()
             {
-                new(Alphabet.COMMON),
-                new(Alphabet.LATIN)
+                new(AlphabetType.COMMON),
+                new(AlphabetType.LATIN)
             };
         }
 
