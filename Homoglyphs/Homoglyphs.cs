@@ -9,13 +9,13 @@ public class Homoglyphs
     public IDictionary<string, IEnumerable<string>> table;
 
     private List<char> _alphabetChars = new();
-    private IList<Languages>? languagesList;
+    private IList<Language>? languagesList;
     private IList<Category>? categoriesList;
     private Strategy _strategy;
 
     public Homoglyphs(
         Strategy strategy = Strategy.STRATEGY_IGNORE,
-        IList<Languages>? languagesList = null,
+        IList<Language>? languagesList = null,
         IList<Category>? categoriesList = null)
     {
         this._strategy = strategy;
@@ -61,13 +61,13 @@ public class Homoglyphs
 
     private bool UpdateAlphabet(char c)
     {
-        var langs = Languages.DetectLanguage(c).ToList();
+        var langs = Language.DetectLanguage(c).ToList();
         if (langs.Any())
         {
             foreach (var lang in langs)
             {
-                this.languagesList?.Add(new Languages(lang));
-                this._alphabetChars.AddRange(Languages.GetAlphabet(lang));
+                this.languagesList?.Add(new Language(lang));
+                this._alphabetChars.AddRange(Language.GetAlphabet(lang));
             }
         }
         else
@@ -88,7 +88,7 @@ public class Homoglyphs
         return true;
     }
 
-    private void GenerateAlphabet(IList<Languages>? languagesList = null, IList<Category>? categoriesList = null)
+    private void GenerateAlphabet(IList<Language>? languagesList = null, IList<Category>? categoriesList = null)
     {
         if (categoriesList == null || !categoriesList.Any())
         {
@@ -113,7 +113,7 @@ public class Homoglyphs
         }
 
         this.categoriesList = categoriesList;
-        this.languagesList = languagesList ?? new List<Languages>();
+        this.languagesList = languagesList ?? new List<Language>();
     }
 
     private static IList<string> GetUniqueAndSorted(IEnumerable<string> list)
