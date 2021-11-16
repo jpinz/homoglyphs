@@ -2,78 +2,36 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // --------------------------------------------------------------------------------------------
 
+using Homoglyphs.Helpers;
+
 namespace Homoglyphs.Models;
 
+/// <summary>
+/// A class to represent a Language.
+/// </summary>
 public class Language
 {
-    private static readonly IDictionary<string, string> LanguageDictionary = new Dictionary<string, string>()
-    {
-        { "AR", @"ءآأؤإئابةتثجحخدذرزسشصضطظعغػؼؽؾؿـفقكلمنهوىيًٌٍَُِّ" },
-        { "BE", @"ʼЁІЎАБВГДЕЖЗЙКЛМНОПРСТУФХЦЧШЫЬЭЮЯабвгдежзйклмнопрстуфхцчшыьэюяёіў" },
-        { "BG", @"АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЬЮЯабвгдежзийклмнопрстуфхцчшщъьюя" },
-        { "CA", @"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÀÈÉÍÏÒÓÚÜÇàèéíïòóúüç·" },
-        { "CZ", @"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÁÉÍÓÚÝáéíóúýČčĎďĚěŇňŘřŠšŤťŮůŽž" },
-        { "DA", @"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÅÆØåæø" },
-        { "DE", @"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÄÖÜßäöü" },
-        { "EL", @"ΪΫΆΈΉΊΌΎΏΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩΐΰϊϋάέήίαβγδεζηθικλμνξοπρςστυφχψωόύώ" },
-        { "EN", @"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz" },
-        { "EO", @"ABCDEFGHIJKLMNOPRSTUVZabcdefghijklmnoprstuvzĈĉĜĝĤĥĴĵŜŝŬŭ" },
-        { "ES", @"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÁÉÍÑÓÚÜáéíñóúü" },
-        { "ET", @"ABDEGHIJKLMNOPRSTUVabdeghijklmnoprstuvÄÕÖÜäõöü" },
-        { "FI", @"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÄÅÖäåöŠšŽž" },
-        { "FR", @"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÀÂÇÈÉÊÎÏÙÛàâçèéêîïùûŒœ" },
-        { "HE", @"אבגדהוזחטיךכלםמןנסעףפץצקרשתװױײ" },
-        { "HR", @"ABCDEFGHIJKLMNOPRSTUVZabcdefghijklmnoprstuvzĆćČčĐđŠšŽž" },
-        { "HU", @"ABCDEFGHIJKLMNOPRSTUVZabcdefghijklmnoprstuvzÁÉÍÓÖÚÜáéíóöúüŐőŰű" },
-        { "IT", @"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÀÈÉÌÒÓÙàèéìòóù" },
-        { "LT", @"ABCDEFGHIJKLMNOPRSTUVYZabcdefghijklmnoprstuvyzĄąČčĖėĘęĮįŠšŪūŲųŽž" },
-        { "LV", @"ABCDEFGHIJKLMNOPRSTUVZabcdefghijklmnoprstuvzĀāČčĒēĢģĪīĶķĻļŅņŠšŪūŽž" },
-        { "MK", @"ЃЅЈЉЊЌЏАБВГДЕЖЗИКЛМНОПРСТУФХЦЧШабвгдежзиклмнопрстуфхцчшѓѕјљњќџ" },
-        { "NL", @"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz" },
-        { "PL", @"ABCDEFGHIJKLMNOPRSTUWYZabcdefghijklmnoprstuwyzÓóĄąĆćĘęŁłŃńŚśŹźŻż" },
-        { "PT", @"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÀÁÂÃÇÉÊÍÓÔÕÚàáâãçéêíóôõú" },
-        { "RO", @"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÂÎâîĂăȘșȚț" },
-        { "RU", @"ЁАБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюяё" },
-        { "SK", @"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÁÄÉÍÓÔÚÝáäéíóôúýČčĎďĹĺĽľŇňŔŕŠšŤťŽž" },
-        { "SL", @"ABCDEFGHIJKLMNOPRSTUVZabcdefghijklmnoprstuvzČčŠšŽž" },
-        {
-            "SR",
-            @"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzЂЈЉЊЋЏАБВГДЕЖЗИКЛМНОПРСТУФХЦЧШабвгдежзиклмнопрстуфхцчшђјљњћџ"
-        },
-        { "TH", @"กขฃคฅฆงจฉชซฌญฎฏฐฑฒณดตถทธนบปผฝพฟภมยรฤลฦวศษสหฬอฮฯะัาำิีึืฺุู฿เแโใไๅๆ็่้๊๋์ํ๎๏๐๑๒๓๔๕๖๗๘๙๚๛" },
-        { "TR", @"ABCDEFGHIJKLMNOPRSTUVYZabcdefghijklmnoprstuvyzÂÇÎÖÛÜâçîöûüĞğİıŞş" },
-        { "VI", @"ABCDEGHIKLMNOPQRSTUVXYabcdeghiklmnopqrstuvxyÂÊÔâêôĂăĐđƠơƯư" },
-    };
+    /// <summary>
+    /// Gets the list of characters in this language's alphabet.
+    /// </summary>
+    public IEnumerable<char> AlphabetChars { get; }
 
-    private IEnumerable<char> _alphabet;
-
-    public Language(string language)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Language"/> class.
+    /// </summary>
+    /// <param name="languageCode">The language code to populate this language's alphabet with.</param>
+    public Language(string languageCode)
     {
-        this._alphabet = GetAlphabet(language);
+        this.AlphabetChars = LanguageHelper.GetAlphabet(languageCode);
     }
 
-    public IEnumerable<char> AlphabetChars => this._alphabet;
-
+    /// <summary>
+    /// Checks to see if the given character appears in this language's alphabet.
+    /// </summary>
+    /// <param name="c">The character to check for.</param>
+    /// <returns>If the character appears in this language's alphabet.</returns>
     public bool IsInAlphabet(char c)
     {
-        return this._alphabet.Contains(c);
-    }
-
-    public static IEnumerable<char> GetAlphabet(string language)
-    {
-        return LanguageDictionary.TryGetValue(language, out var alphabet)
-            ? alphabet.ToCharArray()
-            : throw new InvalidOperationException($"{language} is not a valid language!");
-    }
-
-    public static IEnumerable<string> DetectLanguage(char c)
-    {
-        foreach (var (name, alphabet) in LanguageDictionary)
-        {
-            if (alphabet.Contains(c))
-            {
-                yield return name;
-            }
-        }
+        return this.AlphabetChars.Contains(c);
     }
 }

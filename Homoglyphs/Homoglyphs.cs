@@ -1,4 +1,5 @@
-﻿using Homoglyphs.Models;
+﻿using Homoglyphs.Helpers;
+using Homoglyphs.Models;
 using Homoglyphs.Models.Enums;
 using Newtonsoft.Json;
 
@@ -61,13 +62,13 @@ public class Homoglyphs
 
     private bool UpdateAlphabet(char c)
     {
-        var langs = Language.DetectLanguage(c).ToList();
+        var langs = LanguageHelper.DetectLanguage(c).ToList();
         if (langs.Any())
         {
             foreach (var lang in langs)
             {
                 this.languagesList?.Add(new Language(lang));
-                this._alphabetChars.AddRange(Language.GetAlphabet(lang));
+                this._alphabetChars.AddRange(LanguageHelper.GetAlphabet(lang));
             }
         }
         else
