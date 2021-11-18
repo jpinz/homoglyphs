@@ -1,4 +1,6 @@
-﻿using Homoglyphs.Helpers;
+﻿using System.Text;
+using System.Text.RegularExpressions;
+using Homoglyphs.Helpers;
 using Homoglyphs.Models;
 using Homoglyphs.Models.Enums;
 using Newtonsoft.Json;
@@ -13,13 +15,18 @@ public class Homoglyphs
     private IList<Language>? languagesList;
     private IList<Category>? categoriesList;
     private Strategy _strategy;
+    private Strategy _asciiStrategy;
+
+    private const int AsciiRange = 128;
 
     public Homoglyphs(
         Strategy strategy = Strategy.STRATEGY_IGNORE,
+        Strategy asciiStrategy = Strategy.STRATEGY_IGNORE,
         IList<Language>? languagesList = null,
         IList<Category>? categoriesList = null)
     {
         this._strategy = strategy;
+        this._asciiStrategy = asciiStrategy;
         this.GenerateAlphabet(languagesList, categoriesList);
         this.table = GetTable();
     }
@@ -44,20 +51,60 @@ public class Homoglyphs
             }
         }
 
-
         var variants = this.table.TryGetValue(c.ToString(), out var v) ? v.ToList() : new List<string>();
+        var totalVariants = new List<string>(variants);
         if (variants.Any())
         {
             foreach (var variant in variants)
             {
                 var secondaryVariants = this.table.TryGetValue(variant, out var v2) ? v2.ToList() : new List<string>();
-                variants.AddRange(secondaryVariants);
+                totalVariants.AddRange(secondaryVariants);
             }
         }
 
         variants.Add(c.ToString());
 
         return GetUniqueAndSorted(variants);
+    }
+
+    public IList<string> GetCombinations(string text, bool ascii = false)
+    {
+        var variations = new List<string>();
+        foreach (var c in text)
+        {
+            var charVariants = this.GetCharVariants(c).ToList();
+
+            if (ascii)
+            {
+                for (int i = 0; i < charVariants.Count; i++)
+                {
+                    var noAscii = FilterNonAscii(charVariants[i]);
+                    if (noAscii.Length == 0 && this._asciiStrategy == Strategy.STRATEGY_IGNORE)
+                    {
+                        continue;
+                    }
+
+                    if (noAscii.Length == 0 && this._asciiStrategy == Strategy.STRATEGY_REMOVE)
+                    {
+                        charVariants.RemoveAt(i);
+                    }
+
+                    charVariants[i] = noAscii;
+                }
+            }
+
+            if (charVariants.Any())
+            {
+                variations.AddRange(charVariants);
+            }
+        }
+
+        return variations;
+    }
+
+    public IList<string>? GetAsciiCombinations(string text)
+    {
+        return GetUniqueAndSorted(this.GetCombinations(text, true));
     }
 
     private bool UpdateAlphabet(char c)
@@ -115,6 +162,11 @@ public class Homoglyphs
 
         this.categoriesList = categoriesList;
         this.languagesList = languagesList ?? new List<Language>();
+    }
+
+    private static string FilterNonAscii(string str)
+    {
+        return Regex.Replace(str, @"[\u0000-\u007F]+", string.Empty);
     }
 
     private static IList<string> GetUniqueAndSorted(IEnumerable<string> list)

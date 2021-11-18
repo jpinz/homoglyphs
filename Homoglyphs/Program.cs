@@ -9,6 +9,9 @@ namespace Homoglyphs;
 
 public sealed class Program
 {
+    private static Category category = new Category();
+    private static Homoglyphs homoglyphs = new Homoglyphs();
+
     /// <summary>
     /// The default method for launching the CLI tool.
     /// </summary>
@@ -16,12 +19,13 @@ public sealed class Program
     /// <returns>An integer representing the exit code of the CLI.</returns>
     public static int Main(string[] args)
     {
-        var category = new Category();
+        PrintEnumerable(homoglyphs.GetCombinations("q"));
+
+        // GetAsciiCombinations("lodash");
         /*foreach (var c in categories.GetAlphabet(Alphabet.LATIN))
         {
             Console.WriteLine(c);
         }*/
-        Console.WriteLine(category.Detect('Ж'));
         /*Console.WriteLine(categories.Detect('ต'));
         Console.WriteLine(categories.Detect('-'));
         Console.WriteLine(categories.Detect('↉'));
@@ -58,5 +62,21 @@ public sealed class Program
         }*/
 
         return 0;
+    }
+
+    private static void GetAsciiCombinations(string text)
+    {
+        foreach (var variant in homoglyphs.GetAsciiCombinations(text))
+        {
+            Console.WriteLine(variant);
+        }
+    }
+
+    private static void PrintEnumerable(IEnumerable<string> enumerable)
+    {
+        foreach (var x in enumerable)
+        {
+            Console.WriteLine(string.Join("", x.Select(c => ((int)c).ToString("X2"))));
+        }
     }
 }
